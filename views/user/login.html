@@ -1,0 +1,18 @@
+<h1><%= title %></h1>
+<form action="/login" method="post">
+    <p>
+        <input class="ui-input" type="text" name="username" id="username" placeholder="Username" value="<% if(locals.username) { %><%= username %><% } %>" />
+        <% if (locals.errors && locals.errors.username) { %>
+            <span><%= errors.username.msg %></span>
+        <% } %>
+    </p>
+    <p>
+        <input class="ui-input" type="password" name="password" id="password" placeholder="Password" />
+        <% if(locals.errors && locals.errors.password ) { %>
+            <span><%= errors.password.msg %></span>
+        <% } %>
+    </p>
+    <p>
+        <input class="ui-btn" type="submit" value="登录" /> <a href="/register">注册一个帐号</a>
+    </p>
+</form>

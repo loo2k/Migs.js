@@ -1,0 +1,22 @@
+<h1>用户列表</h1>
+<table width="100%">
+    <tbody>
+        <tr>
+            <td>Username</td>
+            <td>Email</td>
+            <td>Password</td>
+            <td>Action</td>
+        </tr>
+    <% for(var i = 0; i < users.length; i++) { %>
+        <tr>
+            <td><%= users[i].username || ' ' %></td>
+            <td><%= users[i].email || ' ' %></td>
+            <td><%= users[i].password || ' ' %></td>
+            <td>
+                <a href="/u/<%= users[i]._id %>/edit">edit</a> | 
+                <a href="/u/<%= users[i]._id %>/destroy">destroy</a>
+            </td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>

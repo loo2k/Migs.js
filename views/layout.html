@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %> - Migs</title>
+    <link rel="stylesheet" type="text/css" href="<%= config.site_url %>css/style.css" media="all">
+</head>
+<body>
+<div id="header-wrapper">
+    <div id="header" class="ui-layout-wrapper ui-layout-c12 fn-clear">
+        <div class="ui-layout-g12 fn-clear">
+            <h1 class="header-title fn-left">
+                <a href="<%= config.site_url %>">Migs Application</a>
+            </h1>
+            <ul class="header-nav fn-right">
+                <li><a href="<%= config.site_url %>">首页</a></li>
+                <% if( locals.loginUser ) { %>
+                    <li><a href="/photos/<%= loginUser.username %>">我的图片</a></li>
+                    <li><a href="/upload">上传</a></li>
+                    <li><a href="/u/<%= loginUser.username %>"><%= loginUser.username %></a></li>
+                    <li><a href="/logout">退出</a></li>
+                <% } else { %>
+                    <li><a href="/login">登录</a></li>
+                    <li><a href="/register">注册</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="ui-layout-wrapper ui-layout-c12 fn-clear">
+    <div class="content ui-layout-g12">
+        <%- body %>
+    </div>
+</div>
+
+<div class="ui-layout-wrapper ui-layout-c12 fn-clear">
+    <div id="footer" class="ui-layout-g12">
+        &copy; 2013 Migs dev by @<a href="http://loo2k.com/">LOO2K</a>. All rights reserved.
+    </div>
+</div>
+<script type="text/javascript" src="<%= config.site_url %>js/jquery.js"></script>
+<script type="text/javascript" src="<%= config.site_url %>js/plugin.js"></script>
+<script type="text/javascript" src="<%= config.site_url %>js/bear.js"></script>
+</body>
+</html>

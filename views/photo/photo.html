@@ -1,0 +1,28 @@
+<h1><%= title %></h1>
+<div class="fn-clear">
+    <div class="fn-left photo-viwer">
+        <img src="<% if( photo.width > 650 ) { %><%= photo.src.middle %><% } else { %><%= photo.src.large %><% } %>" alt="<%= photo.title %>"/>
+    </div>
+    <div class="fn-right photo-info">
+        <table width="100%">
+            <tbody>
+                <tr>
+                    <td width="60">标题：</td>
+                    <td><%= photo.title %></td>
+                </tr>
+                <tr>
+                    <td width="60">大小：</td>
+                    <td><%= (photo.size/10240).toFixed(2) || '-' %>KB</td>
+                </tr>
+                <tr>
+                    <td width="60">尺寸：</td>
+                    <td><%= photo.width + '*' + photo.height %>px</td>
+                </tr>
+                <tr>
+                    <td width="60">作者：</td>
+                    <td><%= photo.uid %></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

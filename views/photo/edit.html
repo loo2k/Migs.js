@@ -1,0 +1,36 @@
+<h1>编辑 <%= title %></h1>
+<div class="fn-clear">
+    <div class="fn-left photo-viwer">
+        <img src="<% if( photo.width > 650 ) { %><%= photo.src.middle %><% } else { %><%= photo.src.large %><% } %>" alt="<%= photo.title %>"/>
+    </div>
+    <div class="fn-right photo-info">
+        <form action="/p/<%= photo._id %>/edit" method="post">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="60">标题：</td>
+                        <td>
+                            <input class="ui-input" type="text" name="title" id="title" placeholder="图片标题" value="<%= photo.title %>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="60">大小：</td>
+                        <td><%= (photo.size/10240).toFixed(2) || '-' %>KB</td>
+                    </tr>
+                    <tr>
+                        <td width="60">尺寸：</td>
+                        <td><%= photo.width + '*' + photo.height %>px</td>
+                    </tr>
+                    <tr>
+                        <td width="60">作者：</td>
+                        <td><%= photo.uid %></td>
+                    </tr>
+                    <tr>
+                        <td width="60"> </td>
+                        <td><input class="ui-btn" type="submit" value="更新" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

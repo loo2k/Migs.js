@@ -1,0 +1,24 @@
+<h1>图片列表</h1>
+<table width="100%">
+    <tbody>
+        <tr>
+            <td>Thumanials</td>
+            <td>Filename</td>
+            <td>Filesize</td>
+            <td>Status</td>
+            <td>Action</td>
+        </tr>
+        <% for(var i = 0; i < photos.length; i++) { %>
+            <tr>
+                <td><img src="<%= photos[i].src.square %>" alt="<%= photos[i].title %>" height="75" width="75" /></td>
+                <td><a href="/p/<%= photos[i]._id %>"><%= photos[i].title || ' ' %></a></td>
+                <td><%= (photos[i].size/10240).toFixed(2) || '-' %>KB</td>
+                <td><%= photos[i].status || ' ' %></td>
+                <td>
+                    <a href="/p/<%= photos[i]._id %>/edit">edit</a> | 
+                    <a href="/p/<%= photos[i]._id %>/destroy">destroy</a>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
