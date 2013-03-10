@@ -4,16 +4,25 @@
 
 ## TODO
 
-- 优化前端图片展示
-- AJAX 上传支持
-- 多文件上传支持
+- 灯箱图片展示
+- 文件上传优化（HTML, Drag, Flash）
+- 图片切换
+- 排序功能实现
+- 图片分享
+- 喜欢功能
+- 第三方评论功能（多说, disqus, etc...）
+- 图片 EXIF 信息读取
+- 用户 Gravatar 头像支持
+- 第三方服务接入
+- tag, cat 支持
+- bookmark 上传
+- 优化前端图片展示 √
+- 添加对 sea.js 的支持 √
 - etc
 
 ## License
 
 ( The MIT License )
-
-Copyright (c) 2012 - 2013 muyuan, fengmk2 and other nodeclub contributors
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
