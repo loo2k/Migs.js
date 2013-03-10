@@ -1,26 +1,46 @@
-<h1><%= title %></h1>
-<div class="fn-clear">
-    <div class="fn-left photo-viwer">
+<div class="sub-header-wrapper">
+    <div class="sub-header fn-clear">
+        <%= title %>
+    </div>
+</div>
+
+<div class="ui-layout-c12 fn-clear photo-viewer-wrapper">
+    <div class="fn-left photo-viewer">
         <img src="<% if( photo.width > 650 ) { %><%= photo.src.middle %><% } else { %><%= photo.src.large %><% } %>" alt="<%= photo.title %>"/>
     </div>
     <div class="fn-right photo-info">
-        <table width="100%">
+        <table class="photo-info-list" width="100%">
             <tbody>
                 <tr>
-                    <td width="60">标题：</td>
+                    <td class="photo-info-title">标题：</td>
                     <td><%= photo.title %></td>
                 </tr>
                 <tr>
-                    <td width="60">大小：</td>
+                    <td class="photo-info-title">大小：</td>
                     <td><%= (photo.size/10240).toFixed(2) || '-' %>KB</td>
                 </tr>
                 <tr>
-                    <td width="60">尺寸：</td>
+                    <td class="photo-info-title">尺寸：</td>
                     <td><%= photo.width + '*' + photo.height %>px</td>
                 </tr>
                 <tr>
-                    <td width="60">作者：</td>
+                    <td class="photo-info-title">作者：</td>
                     <td><%= photo.uid %></td>
+                </tr>
+                <tr>
+                    <td class="photo-info-title">外链：</td>
+                    <td>
+                        <a class="photo-link" target="_blank" href="<%= photo.src.large %>" data-toggle="tooltip" title="原图 <%= photo.width + '*' + photo.height %>px">大图</a>
+                        <% if( photo.width > 650 ) { %>
+                        <a class="photo-link" target="_blank" href="<%= photo.src.middle %>" data-toggle="tooltip" title="中图 650px">中图</a>
+                        <% } %>
+                        <a class="photo-link" target="_blank" href="<%= photo.src.small %>" data-toggle="tooltip" title="小图 200*200px">小图</a>
+                        <a class="photo-link" target="_blank" href="<%= photo.src.square %>" data-toggle="tooltip" title="缩略图 75*75px">缩略图</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="photo-info-title">描述：</td>
+                    <td><%= photo.desc ? photo.desc : '没有描述' %></td>
                 </tr>
             </tbody>
         </table>

@@ -1,24 +1,34 @@
-<h1>图片列表</h1>
-<table width="100%">
-    <tbody>
-        <tr>
-            <td>Thumanials</td>
-            <td>Filename</td>
-            <td>Filesize</td>
-            <td>Status</td>
-            <td>Action</td>
-        </tr>
-        <% for(var i = 0; i < photos.length; i++) { %>
-            <tr>
-                <td><img src="<%= photos[i].src.square %>" alt="<%= photos[i].title %>" height="75" width="75" /></td>
-                <td><a href="/p/<%= photos[i]._id %>"><%= photos[i].title || ' ' %></a></td>
-                <td><%= (photos[i].size/10240).toFixed(2) || '-' %>KB</td>
-                <td><%= photos[i].status || ' ' %></td>
-                <td>
-                    <a href="/p/<%= photos[i]._id %>/edit">edit</a> | 
-                    <a href="/p/<%= photos[i]._id %>/destroy">destroy</a>
-                </td>
-            </tr>
-        <% } %>
-    </tbody>
-</table>
+<div class="sub-header-wrapper">
+    <div class="sub-header fn-clear">
+        <%= title %>
+    </div>
+</div>
+
+<div class="ui-layout-c12 fn-clear photo-list">
+    <% for(var i = 0; i < photos.length; i++) { %>
+    <div id="photp-<%= photos[i]._id %>" class="ui-layout-g3 photo-item-wrapper">
+        <div class="photo-item">
+            <div class="photo-thumb">
+                <a href="/p/<%= photos[i]._id %>">
+                    <img src="<%= photos[i].src.small %>" alt="<%= photos[i].title %>" height="200" width="200" />
+                </a>
+                <a class="photo-details" href="/p/<%= photos[i]._id %>" title="<%= photos[i].title %>">
+                    <strong class="photo-title">
+                        <%= photos[i].title %>
+                    </strong>
+                    <span class="photo-desc">
+                        <%= photos[i].desc ? photos[i].desc : photos[i].title %>
+                    </span>
+                    <span class="photo-date">
+                        <%= photos[i].create_time.toLocaleDateString() %>
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="photo-action fn-clear">
+            <a class="photo-comment" href="#" data-toggle="tooltip" title="添加一条评论">comment</a>
+            <a class="photo-like" href="#" data-toggle="tooltip" title="喜欢该图片">like</a>
+        </div>
+    </div>
+    <% } %>
+</div>

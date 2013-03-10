@@ -1,9 +1,120 @@
-<h1><%= title %></h1>
-<form action="/upload" method="post" enctype="multipart/form-data">
-    <p>
-        <input type="file" name="images" id="images" />
-    </p>
-    <p>
-        <input class="ui-btn" type="submit" value="上传" />
-    </p>
-</form>
+<div class="sub-header-wrapper">
+    <div class="sub-header fn-clear">
+        <%= title %>
+    </div>
+</div>
+<div class="ui-layout-c12 fn-clear photo-uploader">
+    <div class="ui-layout-g12">
+        <div id="html_upload">
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <p>
+                    <input type="file" name="images" id="images" />
+                </p>
+                <p>
+                    <input class="ui-btn" type="submit" value="上传" />
+                </p>
+            </form>
+        </div>
+
+        <div id="drag_upload">
+            <div id="drag_file" class="drag-box">把文件拖拽到这里</div>
+            <ul id="drag_list"></ul>
+        </div>
+        <script type="text/javascript">
+        if (window.FileReader) {
+
+            var list = document.getElementById('drag_list'),
+                cnt = document.getElementById('drag_file');
+
+            // 判断是否图片
+            function isImage(type) {
+                switch (type) {
+                case 'image/jpeg':
+                case 'image/png':
+                case 'image/gif':
+                case 'image/bmp':
+                case 'image/jpg':
+                    return true;
+                default:
+                    return false;
+                }
+            }
+
+            // 处理拖放文件列表
+            function handleFileSelect(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                var files = evt.dataTransfer.files;
+                var formData = new FormData();
+
+                for (var i = 0, f; f = files[i]; i++) {
+
+                    var t = f.type ? f.type : 'n/a',
+                        reader = new FileReader(),
+                        looks = function (f, img) {
+                            list.innerHTML += '<li><strong>' + f.name + '</strong> (' + t +
+                                ') - ' + f.size + ' bytes</li>';
+                        },
+                        isImg = isImage(t),
+                        img;
+
+                    // 处理得到的图片
+                    if (isImg) {
+                        reader.onload = (function (theFile) {
+                            // formData.append('file', theFile);
+                            formData.append('images', theFile);
+                            return function (e) {
+                                img = '<img class="preview" src="' + e.target.result + '" title="' + theFile.name + '"/>';
+                                looks(theFile, img);
+                            };
+                        })(f)
+                        reader.readAsDataURL(f);
+                    } else {
+                        // img = '"o((>ω< ))o"，你传进来的不是图片！！';
+                        // looks(f, img);
+                        alert('你传进来的不是图片啊！！');
+                    }
+                }
+
+                this.setAttribute('style', '');
+
+                // now post a new XHR request
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/upload');
+                xhr.onload = function () {
+                  if (xhr.status === 200) {
+                    console.log('all done: ' + xhr.status);
+                  } else {
+                    console.log('Something went terribly wrong...');
+                  }
+                };
+
+                xhr.send(formData);
+            }
+            
+            // 处理插入拖出效果
+            function handleDragEnter(evt){ this.setAttribute('style', 'border-color: #666666; color: #333333;'); }
+            function handleDragLeave(evt){ this.setAttribute('style', ''); }
+
+            // 处理文件拖入事件，防止浏览器默认事件带来的重定向
+            function handleDragOver(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
+            
+            cnt.addEventListener('dragenter', handleDragEnter, false);
+            cnt.addEventListener('dragover', handleDragOver, false);
+            cnt.addEventListener('drop', handleFileSelect, false);
+            cnt.addEventListener('dragleave', handleDragLeave, false);
+            
+        } else {
+            document.getElementById('drag_file').innerHTML = '你的浏览器不支持啊，同学';
+        }
+        </script>
+
+        <div id="flash_upload">
+            1111
+        </div>
+    </div>
+</div>
