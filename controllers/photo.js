@@ -169,17 +169,6 @@ exports.upload = function(req, res) {
             var src      = config.root_dir + '/' + config.static_dir + file.dir;
             var dst      = config.root_dir + '/' + config.static_dir + filename;
 
-            if( newPhoto.width >= 650 ) {
-                im.resize({
-                    srcPath: src,
-                    dstPath: dst + '_midddle_' + ext,
-                    width  : 650
-                }, function(err, stdout, stderr){
-                    if (err) throw err;
-                    console.log('resized');
-                });
-            }
-
             if( newPhoto.width >= 200 ) {
                 im.crop({
                     srcPath: src,
@@ -204,6 +193,17 @@ exports.upload = function(req, res) {
                 console.log(err);
             });
 
+            if( newPhoto.width >= 650 ) {
+                im.resize({
+                    srcPath: src,
+                    dstPath: dst + '_midddle_' + ext,
+                    width  : 650
+                }, function(err, stdout, stderr){
+                    if (err) throw err;
+                    console.log('resized');
+                });
+            }
+
             Photo.createPhoto(newPhoto, function(err) {
                 if(err) {
                     console.log(err);
@@ -219,7 +219,7 @@ exports.upload = function(req, res) {
 }
 
 function parsePhoto(photo, dir) {
-    var site_url = dir ? path.join(root_dir, static_dir) : config.site_url;
+    var site_url = dir ? path.join(config.root_dir, config.static_dir) + '/' : config.site_url;
     var filename = photo.dir.slice(0, photo.dir.lastIndexOf('.'));
     var ext      = photo.dir.substr(photo.dir.lastIndexOf('.'));
     var src      = site_url + photo.dir.slice(1);
