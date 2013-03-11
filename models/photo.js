@@ -1,6 +1,10 @@
 var dbPhoto  = require('../dbsource').Photo;
 
-
+/**
+ * 添加一张图片
+ * @param  {Object}   data     
+ * @param  {Function} callback 
+ */
 exports.createPhoto = function(data, callback) {
     var photo = new dbPhoto();
     photo.uid    = data.uid;
@@ -25,14 +29,28 @@ exports.getPhotoById = function(id, callback) {
 
 /**
  * 根据条件，查找一组图片
- * @param  {String}   query   
+ * @param  {Object}   query   
  * @param  {Object}   opt     
  * @param  {Function} callback
  */
-exports.getPhotosByQuery = function (query, opt, callback) {
-    dbPhoto.find(query, [], opt, callback);
+exports.getPhotosByQuery = function(query, opt, callback) {
+    dbPhoto.find(query, '', opt, callback);
 };
 
+/**
+ * 获取符合条件的图片数目
+ * @param  {Object}   query    
+ * @param  {Function} callback 
+ */
+exports.getQueryCount = function(query, callback) {
+    dbPhoto.count(query, callback);
+}
+
+/**
+ * 根据ID，删除一张图片
+ * @param  {Number}   id       
+ * @param  {Function} callback 
+ */
 exports.destroyPhotoById = function(id, callback) {
     dbPhoto.remove({'_id': id}, callback);
 }

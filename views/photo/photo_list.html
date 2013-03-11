@@ -32,3 +32,13 @@
     </div>
     <% } %>
 </div>
+<% if( locals.pagination ) { %>
+<div class="pagination">
+    <% if( pagination.isprevious ) { %>
+        <a href="/?page=<%= pagination.previous %>" class="pagination-item">上一页</a>
+    <% } %>
+    <% if( pagination.isnext ) { %>
+        <a href="/?page=<%= pagination.next %>" class="pagination-item">下一页</a>
+    <% } %>
+</div>
+<% } %>

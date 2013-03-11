@@ -1,6 +1,6 @@
 ## 介绍
 
-此版本的 Migs 是使用 **Node.js** 和 **Mongodb** 开发的一个图片管理程序，来源于 @LOO2K 开发的 PHP 版本 Migs [地址](loo2k.com/blog/sae-migs/)，并以移植项目来学习 Node.js 的使用，代码仅供研究，不建议实际使用；
+此版本的 Migs 是使用 **Node.js** 和 **Mongodb** 开发的一个图片管理程序，来源于 @LOO2K 开发的 PHP 版本 Migs [地址](http://loo2k.com/blog/sae-migs/)，并以移植项目来学习 Node.js 的使用，代码仅供研究，不建议实际使用；
 
 ## TODO
 
@@ -19,6 +19,26 @@
 - 优化前端图片展示 √
 - 添加对 sea.js 的支持 √
 - etc
+
+## changlogs
+
+### 2013年3月11日
+
+ - 去除 nidr 模块依赖，使复制图片函数支持跨磁盘操作
+ - 添加图片缩略图方法
+ - 添加图片链接获取方法
+ - 更新了 models 模块中获取图片的方法
+ - 对图片列表增加分页功能
+
+### 2013年3月10日
+
+ - 添加对 sea.js 的支持，前端使用 sea.js 进行模块开发
+ - 修复删除图片时路径出错的问题
+
+### 2013年3月06日
+
+ - 新建项目
+ - 添加 package.json 以及 README.md 文档
 
 ## License
 

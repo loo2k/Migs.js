@@ -5,26 +5,76 @@ var upload  = require('./upload');
 var config  = require('../config').config;
 var fs      = require('fs');
 var path    = require('path');
-var ndir    = require('ndir');
 var im      = require('imagemagick');
 
 exports.showPhotos = function(req, res) {
     var data = {
-        title: '图片列表'
+        title: '图片列表',
+        page: req.query['page'] ? parseInt(req.query['page'], 10) : 1,
     };
-    dbPhoto.find({}, function(err, photos) {
+    
+    var query = {};
+
+    var option = {};
+    option.limit = req.query['show'] ? parseInt(req.query['show'], 10) : config.photo_limit;
+    option.skip = ( data.page - 1)*option.limit;
+    option.sort = [['create_time', -1]];
+
+    Photo.getPhotosByQuery(query, option, function(err, photos) {
         for (var i = photos.length - 1; i >= 0; i--) {
             photos[i].src = parsePhoto(photos[i]);
         };
-        data.photos = photos;
-        res.render('photo/photo_list', data);
+
+        Photo.getQueryCount(query, function(err, total) {
+            if(err) throw err;
+
+            data.pagination = pagination(total, data.page, option.limit, 5, 5);
+            data.photos = photos;
+            res.render('photo/photo_list', data);
+        });
+
+    });
+}
+
+exports.showUserPhoto = function(req, res) {
+    User.getUserByName(req.params.username, function(err, user) {
+        if(!user) {
+            return res.send('404', {code: '404', error: '1', msg: '用户不存在'});
+        }
+
+        var data = {
+            title: '图片列表',
+            page: req.query['page'] ? parseInt(req.query['page'], 10) : 1,
+        };
+
+        var query = { uid: user._id };
+
+        var option = {};
+        option.limit = req.query['show'] ? parseInt(req.query['show'], 10) : config.photo_limit;
+        option.skip = ( data.page - 1)*option.limit;
+        option.sort = [['create_time', -1]];
+
+        Photo.getPhotosByQuery(query, option, function(err, photos) {
+            for (var i = photos.length - 1; i >= 0; i--) {
+                console.log(photos[i]);
+                photos[i].src = parsePhoto(photos[i]);
+            };
+            
+            Photo.getQueryCount(query, function(err, total) {
+                if(err) throw err;
+
+                data.pagination = pagination(total, data.page, option.limit, 5, 5);
+                data.photos = photos;
+                res.render('photo/photo_list', data);
+            });
+        });
     });
 }
 
 exports.showPhoto = function(req, res) {
     Photo.getPhotoById(req.params.id, function(err, photo) {
         if(!photo) {
-            return res.send({code: '404', error: '1', msg: '图片不存在'});
+            return res.send('404', {code: '404', error: '1', msg: '图片不存在'});
         }
         
         photo.src = parsePhoto(photo);
@@ -41,7 +91,7 @@ exports.showPhoto = function(req, res) {
 exports.showEditPhoto = function(req, res) {
     Photo.getPhotoById(req.params.id, function(err, photo) {
         if(!photo) {
-            return res.send({code: '404', error: '1', msg: '图片不存在'});
+            return res.send('404', {code: '404', error: '1', msg: '图片不存在'});
         }
         if( err ) {
             console.log(err);
@@ -60,7 +110,7 @@ exports.showEditPhoto = function(req, res) {
 exports.editPhoto = function(req, res) {
     Photo.getPhotoById(req.params.id, function(err, photo) {
         if(!photo) {
-            return res.send({code: '404', error: '1', msg: '图片不存在'});
+            return res.send('404', {code: '404', error: '1', msg: '图片不存在'});
         }
         if( err ) {
             console.log(err);
@@ -78,29 +128,9 @@ exports.editPhoto = function(req, res) {
     });
 }
 
-exports.showUserPhoto = function(req, res) {
-    User.getUserByName(req.params.username, function(err, user) {
-        if(!user) {
-            return res.send({code: '404', error: '1', msg: '用户不存在'});
-        }
-
-        var data = {
-            title: '图片列表'
-        };
-
-        dbPhoto.find({uid: user._id}, function(err, photos) {
-            for (var i = photos.length - 1; i >= 0; i--) {
-                photos[i].src = parsePhoto(photos[i]);
-            };
-            data.photos = photos;
-            res.render('photo/photo_list', data);
-        });
-    });
-}
-
 exports.destroyPhoto = function(req, res) {
     if(!req.session.user) {
-        return res.send({code: '403', error: '1', msg: '未获得授权'});
+        return res.send('403', {code: '403', error: '1', msg: '未获得授权'});
     }
 
     var pid = req.params.id;
@@ -109,12 +139,12 @@ exports.destroyPhoto = function(req, res) {
         if (err) throw err;
 
         if(!photo) {
-            return res.send({code: '404', error: '1', msg: '没有找到图片'});
+            return res.send('404', {code: '404', error: '1', msg: '没有找到图片'});
         }
 
         if( photo.uid == req.session.user._id ) {
             Photo.destroyPhotoById(pid, function(err) {
-                //res.send('delete');
+                
                 photo.src = parsePhoto(photo, true);
                 for( var type in photo.src ) {
                     var len = (config.site_url + 'upload').length;
@@ -123,17 +153,17 @@ exports.destroyPhoto = function(req, res) {
                         if(err) throw err;
                     });
                 }
-                res.send({code: '200', msg: '删除成功'});
+                res.send('200', {code: '200', msg: '删除成功'});
             });
         } else {
-            res.send({code: '403', error: '1', msg: '没有权限'});
+            res.send('403', {code: '403', error: '1', msg: '没有权限'});
         }
     });
 }
 
 exports.showUpload = function(req, res) {
     if( !req.session.user ) {
-        return res.send({code: '403', error: '1', msg: '未获得授权'});
+        return res.send('403', {code: '403', error: '1', msg: '未获得授权'});
     }
     var data = {
         title: '上传图片'
@@ -143,16 +173,32 @@ exports.showUpload = function(req, res) {
 
 exports.upload = function(req, res) {
     if( !req.session.user ) {
-        return res.send({code: '403', error: '1', msg: '未获得授权'});
+        return res.send('403', {code: '403', error: '1', msg: '未获得授权'});
     }
 
     upload.uploadFile(req, res, function(err, file) {
         if(err) {
             console.log(err);
         }
-        im.identify(config.root_dir + '/' + config.static_dir + file.dir, function(err, features){
+
+        var uploadFilePath = config.root_dir + '/' + config.static_dir + file.dir;
+
+        upload.identifyImage(uploadFilePath, function(err, features){
             if (err) throw err;
-            // { format: 'JPEG', width: 3904, height: 2622, depth: 8 }
+
+            var thumbFile = {
+                width   : features.width,
+                height  : features.height,
+                filename: file.dir.slice(0, file.dir.lastIndexOf('.')),
+                ext     : file.dir.substr(file.dir.lastIndexOf('.')),
+                src     : uploadFilePath,
+                dst     : uploadFilePath.slice(0, uploadFilePath.lastIndexOf('.'))
+            }
+
+            upload.thumbImage(thumbFile, function(err) {
+                if(err) throw err;
+            });
+
             var newPhoto = {
                 uid   : req.session.user._id,
                 title : file.name,
@@ -162,46 +208,6 @@ exports.upload = function(req, res) {
                 width : features.width,
                 height: features.height,
                 status: 1
-            }
-            
-            var filename = file.dir.slice(0, file.dir.lastIndexOf('.'));
-            var ext      = file.dir.substr(file.dir.lastIndexOf('.'));
-            var src      = config.root_dir + '/' + config.static_dir + file.dir;
-            var dst      = config.root_dir + '/' + config.static_dir + filename;
-
-            if( newPhoto.width >= 200 ) {
-                im.crop({
-                    srcPath: src,
-                    dstPath: dst + '_small_' + ext,
-                    width: 200,
-                    height: 200,
-                    quality: 1,
-                    gravity: "North"
-                }, function(err, stdout, stderr){
-                    console.log(err);
-                });
-            }
-
-            im.crop({
-                srcPath: src,
-                dstPath: dst + '_square_' + ext,
-                width: 75,
-                height: 75,
-                quality: 1,
-                gravity: "North"
-            }, function(err, stdout, stderr){
-                console.log(err);
-            });
-
-            if( newPhoto.width >= 650 ) {
-                im.resize({
-                    srcPath: src,
-                    dstPath: dst + '_midddle_' + ext,
-                    width  : 650
-                }, function(err, stdout, stderr){
-                    if (err) throw err;
-                    console.log('resized');
-                });
             }
 
             Photo.createPhoto(newPhoto, function(err) {
@@ -230,4 +236,140 @@ function parsePhoto(photo, dir) {
         small: dst + '_small_' + ext,
         square: dst + '_square_' + ext
     }
+}
+
+function pagination(total, page, pagesize, offset, length) {
+
+    //最后一页
+    //计算方法：最大文章数 / 每页文章数
+    var lastpage   = Math.ceil( total / pagesize );
+
+    //共有多少个分页
+    var loopcount  = Math.ceil( lastpage / pagesize );
+
+    //重新计算
+    page = page    > lastpage ? 1 : page;
+
+    //前一页、后一页
+    var previous   = parseInt( page ) - 1;
+    var next       = parseInt( page ) + 1;
+
+    //是否显示前一页/后一页
+    var isprevious, isnext;
+    isnext     = next - 1             < lastpage ? true : false;
+    isprevious = parseInt( previous ) > 0        ? true : false;
+
+    //开始 结束 步长
+    var begin, end, step;
+    //计算步长
+    step       = lastpage >  length       ? length         : lastpage;
+    //计算开始
+    //1 2 3 4 5 6
+    //点击6时，产生4 5 6 7 8 9
+    //而非 7 8 9 10 11 12
+    //if ( lastpage - page < step ) {
+    //  begin   = lastpage - step + 1;
+    //}
+    //else if ( offset > 0 ) {
+    //  begin   = page    <= offset        ? 1              : page - offset;
+    //}
+    if ( offset > 0 ) {
+        begin   = page   <= offset         ? 1              : page - offset;
+    }
+    else if ( offset == 0 && page == 1 ) {
+        begin   = 1;
+    }
+    else if ( page != 1 && oldpage < page ) {
+        begin   = page    < pagesize        ? 1             : page;
+    }
+    else if ( page != 1 && oldpage >= page ) {
+        begin   = page    < pagesize        ? 1             : page - step + 1;
+    }
+    //计算结束
+    end     = parseInt( begin )    +  parseInt( step );
+    //如果end比lastpage大的话，赋值为lastpage
+    end     = end      >= lastpage ? lastpage + 1 : end;
+
+    if ( end - begin + 1 != step ) {
+        end = begin + step;
+    }
+    if ( begin + step - 1 > lastpage ) {
+        begin = lastpage - step + 1;
+        end   = lastpage + 1;
+    }
+
+    //前滚、后滚
+    //是否显示>> and <<
+    var isforward, isback;
+    isforward = lastpage - end >= 1          ? true         : false;
+    isback    = begin          >  1          ? true         : false;
+
+    //前进/后退到第几页
+    var forward , back;
+    back      = begin - 1      <= 0          ? 1            : begin - 1;
+    forward   = end;
+
+    //backup page
+    oldpage = page;
+
+    //////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////
+
+    var pv = {};
+    //总数
+    pv.total     = total;
+    //当前页
+    pv.page      = parseInt( page );
+    //每页的内容数
+    pv.pagesize  = pagesize;
+    //最后一页
+    pv.lastpage  = lastpage;
+    //共计多少分页
+    pv.loopcount = loopcount;
+    //前一页
+    pv.previous  = previous;
+    //后一页
+    pv.next      = next;
+    //是否显示前一页
+    pv.isprevious = isprevious;
+    //是否显示后一页
+    pv.isnext     = isnext;
+    //开始
+    pv.begin    = begin;
+    //结束
+    pv.end      = end;
+    //步长
+    pv.step     = step;
+    //是否可以前进，指">>"
+    pv.isforward  = isforward;
+    //是否可以后退，指"<<"
+    pv.isback     = isback;
+    //前进到第几页
+    pv.forward  = forward;
+    //后退到第几页
+    pv.back     = back;
+    //偏移量
+    pv.offset   = offset;
+    //begin -> end 时的步长
+    pv.length   = length;
+
+    console.log( "pv.page           = " + pv.page );
+    console.log( "pv.total          = " + pv.total );
+    console.log( "pv.loopcount      = " + pv.loopcount );
+    console.log( "pv.pagesize       = " + pv.pagesize );
+    console.log( "pv.lastpage       = " + pv.lastpage );
+    console.log( "pv.begin          = " + pv.begin );
+    console.log( "pv.end            = " + pv.end );
+    console.log( "pv.previous       = " + pv.previous );
+    console.log( "pv.next           = " + pv.next );
+    console.log( "pv.isprevious     = " + pv.isprevious );
+    console.log( "pv.isnext         = " + pv.isnext );
+    console.log( "pv.isforward      = " + pv.isforward );
+    console.log( "pv.isback         = " + pv.isback );
+    console.log( "pv.forward        = " + pv.forward );
+    console.log( "pv.back           = " + pv.back );
+    console.log( "pv.offset         = " + pv.offset );
+    console.log( "pv.length         = " + pv.length );
+
+    return pv;
 }

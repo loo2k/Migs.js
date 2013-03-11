@@ -9,4 +9,5 @@ exports.config = {
     db            : 'mongodb://localhost/migs',
     cookies_prefix: 'migs_',
     session_secret: 'migsapp',
+    photo_limit   : 12,
 }
