@@ -6,7 +6,7 @@ var config  = require('../config').config;
 var fs      = require('fs');
 var path    = require('path');
 var im      = require('imagemagick');
-
+var url     = require('url');
 exports.showPhotos = function(req, res) {
     var data = {
         title: '图片列表',
@@ -28,6 +28,12 @@ exports.showPhotos = function(req, res) {
         Photo.getQueryCount(query, function(err, total) {
             if(err) throw err;
 
+            // 分页的准备
+            if( req.query.page ) delete req.query.page;
+            data.base_url = url.format({
+                pathname: req.path,
+                query: req.query
+            });
             data.pagination = pagination(total, data.page, option.limit, 5, 5);
             data.photos = photos;
             res.render('photo/photo_list', data);
@@ -39,7 +45,7 @@ exports.showPhotos = function(req, res) {
 exports.showUserPhoto = function(req, res) {
     User.getUserByName(req.params.username, function(err, user) {
         if(!user) {
-            return res.send('404', {code: '404', error: '1', msg: '用户不存在'});
+            return res.json('404', {code: '404', error: '1', msg: '用户不存在'});
         }
 
         var data = {
@@ -63,6 +69,12 @@ exports.showUserPhoto = function(req, res) {
             Photo.getQueryCount(query, function(err, total) {
                 if(err) throw err;
 
+                // 分页的准备
+                if( req.query.page ) delete req.query.page;
+                data.base_url = url.format({
+                    pathname: req.path,
+                    query: req.query
+                });
                 data.pagination = pagination(total, data.page, option.limit, 5, 5);
                 data.photos = photos;
                 res.render('photo/photo_list', data);
@@ -74,7 +86,7 @@ exports.showUserPhoto = function(req, res) {
 exports.showPhoto = function(req, res) {
     Photo.getPhotoById(req.params.id, function(err, photo) {
         if(!photo) {
-            return res.send('404', {code: '404', error: '1', msg: '图片不存在'});
+            return res.json('404', {code: '404', error: '1', msg: '图片不存在'});
         }
         
         photo.src = parsePhoto(photo);
@@ -91,7 +103,7 @@ exports.showPhoto = function(req, res) {
 exports.showEditPhoto = function(req, res) {
     Photo.getPhotoById(req.params.id, function(err, photo) {
         if(!photo) {
-            return res.send('404', {code: '404', error: '1', msg: '图片不存在'});
+            return res.json('404', {code: '404', error: '1', msg: '图片不存在'});
         }
         if( err ) {
             console.log(err);
@@ -110,7 +122,7 @@ exports.showEditPhoto = function(req, res) {
 exports.editPhoto = function(req, res) {
     Photo.getPhotoById(req.params.id, function(err, photo) {
         if(!photo) {
-            return res.send('404', {code: '404', error: '1', msg: '图片不存在'});
+            return res.json('404', {code: '404', error: '1', msg: '图片不存在'});
         }
         if( err ) {
             console.log(err);
@@ -130,7 +142,7 @@ exports.editPhoto = function(req, res) {
 
 exports.destroyPhoto = function(req, res) {
     if(!req.session.user) {
-        return res.send('403', {code: '403', error: '1', msg: '未获得授权'});
+        return res.json('403', {code: '403', error: '1', msg: '未获得授权'});
     }
 
     var pid = req.params.id;
@@ -139,7 +151,7 @@ exports.destroyPhoto = function(req, res) {
         if (err) throw err;
 
         if(!photo) {
-            return res.send('404', {code: '404', error: '1', msg: '没有找到图片'});
+            return res.json('404', {code: '404', error: '1', msg: '没有找到图片'});
         }
 
         if( photo.uid == req.session.user._id ) {
@@ -153,17 +165,17 @@ exports.destroyPhoto = function(req, res) {
                         if(err) throw err;
                     });
                 }
-                res.send('200', {code: '200', msg: '删除成功'});
+                res.json('200', {code: '200', msg: '删除成功'});
             });
         } else {
-            res.send('403', {code: '403', error: '1', msg: '没有权限'});
+            res.json('403', {code: '403', error: '1', msg: '没有权限'});
         }
     });
 }
 
 exports.showUpload = function(req, res) {
     if( !req.session.user ) {
-        return res.send('403', {code: '403', error: '1', msg: '未获得授权'});
+        return res.json('403', {code: '403', error: '1', msg: '未获得授权'});
     }
     var data = {
         title: '上传图片'
@@ -173,7 +185,7 @@ exports.showUpload = function(req, res) {
 
 exports.upload = function(req, res) {
     if( !req.session.user ) {
-        return res.send('403', {code: '403', error: '1', msg: '未获得授权'});
+        return res.json('403', {code: '403', error: '1', msg: '未获得授权'});
     }
 
     upload.uploadFile(req, res, function(err, file) {

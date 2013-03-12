@@ -7,23 +7,25 @@ var express = require('express'),
     expressValidator = require('express-validator'),
     partials         = require('express-partials'),
     routes           = require('./routes'),
-    ndir             = require('ndir'),
     http             = require('http'), 
-    path             = require('path');
-
-// global
-config = require('./config').config;
+    path             = require('path'),
+    fs               = require('fs'),
+    config           = require('./config').config;
 
 // ensure upload dir exists
-ndir.mkdir(config.upload_dir, function (err) {
-    if (err) {
-        throw err;
+fs.exists(config.upload_dir, function(exists) {
+    if( !exists ) {
+        fs.mkdir(config.upload_dir, function(err) {
+            if(err) {
+                return err;
+            }
+        });
     }
 });
 
 var app = express();
 
-app.configure(function(){
+app.configure(function() {
     app.set('port', config.port);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
@@ -36,6 +38,10 @@ app.configure(function(){
     app.use(express.cookieParser());
     app.use(express.session({secret: config.session_secret}));
     app.use(require('./controllers/user').authLogin);
+    app.use(function(req, res, next) {
+        res.locals.config = config;
+        next();
+    });
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, config.static_dir)));
