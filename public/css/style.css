@@ -333,18 +333,27 @@ body .fn-hide {
 }
 
 .ui-btn {
-    border: none;
     cursor: pointer;
-    background-color: #CCC;
-    padding: 4px 15px;
-    border-radius: 3px;
     vertical-align: middle;
-    margin-right: 10px;
     font-size: 14px;
+    margin-right: 5px;
+    padding: 2px 15px;
+    line-height: 24px;
+    border: 1px solid #ccc;
+    background-color: #F5F5F5;
+    border-radius: 2px;
+    background-image: linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -webkit-linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -o-linear-gradient(top,#f5f5f5,#f1f1f1);
+    color: #666;
+    text-shadow: 1px 1px 1px #FFFFFF;
+    box-shadow: 1px 1px 1px #DDDDDD;
 }
 
 .ui-btn:hover {
-    background-color: #999999;
+    color: #333333;
+    border-color: #999999;
+    box-shadow: 1px 1px 2px #DDDDDD;
 }
 
 form p {
@@ -462,8 +471,7 @@ a:hover {
  * Photo list
  */
 .photo-item-wrapper {
-    margin-bottom: 15px;
-
+    margin-bottom: 18px;
 }
 
 .photo-item {
@@ -547,8 +555,22 @@ a:hover {
     text-align: right;
 }
 
-.photo-action a {
+.photo-action-item {
     margin-left: 5px;
+}
+
+.photo-author {
+    margin: 0;
+    float: left;
+    font-weight: bold;
+}
+
+.photo-avatar {
+    vertical-align: middle;
+    border-radius: 2px;
+    height: 16px;
+    width: 16px;
+    margin-right: 2px;
 }
 
 .photo-comment {
@@ -567,6 +589,41 @@ a:hover {
 
 .photo-like:hover {
     background-position: 0 -32px;
+}
+
+/**
+ * Pagination Style
+ */
+.pagination {
+    margin: 15px 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+.pagination-analy {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #999999;
+}
+
+.pagination-item {
+    margin: 0 5px;
+    padding: 5px 12px;
+    border: 1px solid #ccc;
+    background-color: #F5F5F5;
+    border-radius: 2px;
+    background-image: linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -webkit-linear-gradient(top,#f5f5f5,#f1f1f1);
+    background-image: -o-linear-gradient(top,#f5f5f5,#f1f1f1);
+    color: #666;
+    text-shadow: 1px 1px 1px #FFFFFF;
+    box-shadow: 1px 1px 1px #DDDDDD;
+}
+
+.pagination-item:hover {
+    color: #333333;
+    border-color: #999999;
+    box-shadow: 1px 1px 2px #DDDDDD;
 }
 
 /**

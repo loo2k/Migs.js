@@ -1,18 +1,30 @@
-<h1><%= title %></h1>
-<form action="/u/<%= user.username %>/edit" method="post">
-    <p>
-        <input class="ui-input" type="text" name="username" id="username" placeholder="Username" value="<%= user.username %>" />
-        <% if (locals.errors && locals.errors.username) { %>
-            <span><%= errors.username.msg %></span>
-        <% } %>
-    </p>
-    <p>
-        <input class="ui-input" type="text" name="email" id="email" placeholder="Email" value="<%= user.email %>" />
-        <% if(locals.errors && locals.errors.email ) { %>
-            <span><%= errors.email.msg %></span>
-        <% } %>
-    </p>
-    <p>
-        <input class="ui-btn" type="submit" value="保存" /> <a href="/users">返回用户列表</a>
-    </p>
-</form>
+<div class="sub-header-wrapper">
+    <div class="sub-header fn-clear">
+        <%= title %>
+    </div>
+</div>
+
+<div class="ui-layout-c12 fn-clear">
+    <div class="ui-layout-g12">
+        <form action="/u/<%= user.username %>/edit" method="post">
+            <p>
+                <img src="<%= user.avatar %>?s=48" alt="<%= user.username %>" />
+            </p>
+            <p>
+                <input class="ui-input" type="text" name="username" id="username" placeholder="Username" value="<%= user.username %>" />
+                <% if (locals.errors && locals.errors.username) { %>
+                    <span><%= errors.username.msg %></span>
+                <% } %>
+            </p>
+            <p>
+                <input class="ui-input" type="text" name="email" id="email" placeholder="Email" value="<%= user.email %>" />
+                <% if(locals.errors && locals.errors.email ) { %>
+                    <span><%= errors.email.msg %></span>
+                <% } %>
+            </p>
+            <p>
+                <input class="ui-btn" type="submit" value="保存" /> <a href="/users">返回用户列表</a>
+            </p>
+        </form>
+    </div>
+</div>

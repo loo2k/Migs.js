@@ -4,23 +4,34 @@
 
 ## TODO
 
-- 灯箱图片展示
-- 文件上传优化（HTML, Drag, Flash）
-- 图片切换
-- 排序功能实现
-- 图片分享
-- 喜欢功能
-- 第三方评论功能（多说, disqus, etc...）
-- 图片 EXIF 信息读取
-- 用户 Gravatar 头像支持
-- 第三方服务接入
-- tag, cat 支持
-- bookmark 上传
-- 优化前端图片展示 √
-- 添加对 sea.js 的支持 √
+- [] 灯箱图片展示
+- [] 文件上传优化（HTML, Drag, Flash）
+- [] 图片切换
+- [x] 排序功能存在 bug
+- [] 图片分享
+- [] 喜欢功能
+- [] 第三方评论功能（多说, disqus, etc...）
+- [] 图片 EXIF 信息读取
+- [x] 用户 Gravatar 头像支持
+- [] 第三方服务接入
+- [] tag, cat 支持
+- [] bookmark 上传
+- [x] 优化前端图片展示
+- [x] 添加对 sea.js 的支持
 - etc
 
 ## changlogs
+
+### 2013年3月13日
+
+ - 分页样式优化
+ - 获取图片增加关联用户查询输出
+ - 添加 EventProxy 模块的支持
+ - 添加 helper 目录放一些常用的函数模块
+ - 转移 controller 文件夹中的 upload.js 到 helper 中的 photo.js
+ - 修改 dbsource 文件夹名称为 db
+ - 添加 Gravatar 的支持
+ - 分页错误显示总页数 bug 修复
 
 ### 2013年3月12日
 

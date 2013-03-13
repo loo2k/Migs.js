@@ -113,3 +113,17 @@ exports.thumbImage = function(file, next) {
     }
 
 }
+
+exports.parsePhoto = function(photo, dir) {
+    var site_url = dir ? path.join(config.root_dir, config.static_dir) + '/' : config.site_url;
+    var filename = photo.dir.slice(0, photo.dir.lastIndexOf('.'));
+    var ext      = photo.dir.substr(photo.dir.lastIndexOf('.'));
+    var src      = site_url + photo.dir.slice(1);
+    var dst      = site_url + filename.slice(1);
+    return {
+        large: src,
+        middle: dst + '_midddle_' + ext,
+        small: dst + '_small_' + ext,
+        square: dst + '_square_' + ext
+    }
+}

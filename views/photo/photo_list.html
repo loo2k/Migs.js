@@ -20,14 +20,18 @@
                         <%= photos[i].desc ? photos[i].desc : photos[i].title %>
                     </span>
                     <span class="photo-date">
-                        <%= photos[i].create_time.toLocaleDateString() %>
+                        <%= photos[i].formated_create_time %>
                     </span>
                 </a>
             </div>
         </div>
         <div class="photo-action fn-clear">
-            <a class="photo-comment" href="#" data-toggle="tooltip" title="添加一条评论">comment</a>
-            <a class="photo-like" href="#" data-toggle="tooltip" title="喜欢该图片">like</a>
+            <a class="photo-author photo-action-item" href="/photos/<%= photos[i].author.username %>" data-toggle="tooltip" title="查看 <%= photos[i].author.username %> 的所有相片">
+                <img class="photo-avatar" src="<%= photos[i].author.avatar %>?s=16" alt="<%= photos[i].author.username %>" />
+                <%= photos[i].author.username %>
+            </a>
+            <!-- <a class="photo-comment photo-action-item" href="#" data-toggle="tooltip" title="添加一条评论"></a> -->
+            <a class="photo-like photo-action-item" href="#" data-toggle="tooltip" title="喜欢该图片">+1</a>
         </div>
     </div>
     <% } %>
@@ -36,10 +40,13 @@
 <% var base_url = base_url + ( base_url.indexOf('?') < 0 ? '?' : '&' ) + 'page='; %>
 <div class="pagination">
     <% if( pagination.isprevious ) { %>
-        <a href="<%= base_url + pagination.previous %>" class="pagination-item">上一页</a>
+        <a href="<%= base_url + pagination.previous %>" class="pagination-item pagination-prev">&laquo; 上一页</a>
     <% } %>
     <% if( pagination.isnext ) { %>
-        <a href="<%= base_url + pagination.next %>" class="pagination-item">下一页</a>
+        <a href="<%= base_url + pagination.next %>" class="pagination-item pagination-next">下一页 &raquo;</a>
     <% } %>
+    <div class="pagination-analy">
+        当前第 <%= pagination.page %> 页 &middot; 共 <%= pagination.lastpage %> 页 &middot; 当前显示 <%= photos.length %> 条 &middot; 总共 <%= pagination.total %> 条内容
+    </div>
 </div>
 <% } %>

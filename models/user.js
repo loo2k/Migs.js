@@ -1,4 +1,4 @@
-var dbUser  = require('../dbsource').User;
+var dbUser  = require('../db').User;
 
 /**
  * 添加用户

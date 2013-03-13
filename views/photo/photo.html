@@ -25,7 +25,18 @@
                 </tr>
                 <tr>
                     <td class="photo-info-title">作者：</td>
-                    <td><%= photo.uid %></td>
+                    <td>
+                        <a href="/photos/<%= photo.author.username %>" data-toggle="tooltip" title="查看 <%= photo.author.username %> 的所有相片">
+                            <img class="photo-avatar" src="<%= photo.author.avatar %>?s=16" alt="<%= photo.author.username %>" />
+                            <%= photo.author.username %>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="photo-info-title">上传于：</td>
+                    <td>
+                        <%= photo.formated_create_time %>
+                    </td>
                 </tr>
                 <tr>
                     <td class="photo-info-title">外链：</td>

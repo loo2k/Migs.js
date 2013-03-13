@@ -1,6 +1,6 @@
 var User   = require('../models').User;
-var dbUser = require('../dbsource').User;
-var crypto = require('crypto');
+var dbUser = require('../db').User;
+var util   = require('../helper').util;
 var config = require('../config').config;
 
 exports.authLogin = function(req, res, next) {
@@ -13,7 +13,7 @@ exports.authLogin = function(req, res, next) {
                 return next(err); 
             }
 
-            if(!user || loginUser.authkey !== cryptpass(user.password + req.headers['user-agent'])) {
+            if(!user || loginUser.authkey !== util.cryptpass(user.password + req.headers['user-agent'])) {
                 return next();
             }
 
@@ -21,7 +21,7 @@ exports.authLogin = function(req, res, next) {
                 '_id': user._id,
                 'username': user.username,
                 'email': user.email,
-                'authkey': cryptpass(user.password + req.headers['user-agent'])
+                'authkey': util.cryptpass(user.password + req.headers['user-agent'])
             };
 
             res.cookie(config.cookies_prefix + 'login', req.session.user);
@@ -57,7 +57,7 @@ exports.login = function(req, res) {
     // 准备登录数据
     var loginUser = {
         username : req.sanitize('username').xss().trim(),
-        password : cryptpass(req.sanitize('password').xss().trim())
+        password : util.cryptpass(req.sanitize('password').xss().trim())
     }
 
     var errors = req.validationErrors(true);
@@ -100,7 +100,7 @@ exports.login = function(req, res) {
             '_id': user._id,
             'username': user.username,
             'email': user.email,
-            'authkey': cryptpass(user.password + req.headers['user-agent'])
+            'authkey': util.cryptpass(user.password + req.headers['user-agent'])
         };
 
         res.cookie(config.cookies_prefix + 'login', req.session.user);
@@ -133,8 +133,8 @@ exports.register = function(req, res) {
     var user = {
         username : req.sanitize('username').xss().trim(),
         email    : req.sanitize('email').xss().trim().toLowerCase(),
-        password : cryptpass(req.sanitize('password').xss().trim()),
-        vpassword: cryptpass(req.sanitize('vpassword').xss().trim())
+        password : util.cryptpass(req.sanitize('password').xss().trim()),
+        vpassword: util.cryptpass(req.sanitize('vpassword').xss().trim())
     }
 
     var errors = req.validationErrors(true);
@@ -225,6 +225,9 @@ exports.showEditUser = function(req, res) {
             res.render('message', {title: 'Not Found.', msg: 'Not found this user.'});
             return;
         }
+
+        user.avatar = util.avatar(user.email);
+
         var data = {
             title: '编辑个人信息',
             user: user
@@ -311,23 +314,4 @@ exports.logout = function(req, res) {
     res.clearCookie(config.cookies_prefix + 'login');
     res.redirect('../login');
     res.send("logout success");
-}
-
-// 私有函数
-function md5(str) {
-    var md5e = crypto.createHash('md5');
-    md5e.update(str);
-    str = md5e.digest('hex');
-    return str;
-}
-
-function sha1(str) {
-    var sha1 = crypto.createHash('sha1');
-    sha1.update(str);
-    str = sha1.digest('hex');
-    return str;
-}
-
-function cryptpass(str) {
-    return md5(md5(str) + sha1('migs'));
 }
