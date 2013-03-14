@@ -4,23 +4,27 @@
 
 ## TODO
 
-- [] 灯箱图片展示
-- [] 文件上传优化（HTML, Drag, Flash）
-- [] 图片切换
+- [x] 灯箱图片展示
+- [ ] 文件上传优化（HTML, Drag, Flash）
+- [ ] 图片切换
 - [x] 排序功能存在 bug
-- [] 图片分享
-- [] 喜欢功能
-- [] 第三方评论功能（多说, disqus, etc...）
-- [] 图片 EXIF 信息读取
+- [ ] 图片分享
+- [ ] 喜欢功能
+- [ ] 第三方评论功能（多说, disqus, etc...）
+- [ ] 图片 EXIF 信息读取
 - [x] 用户 Gravatar 头像支持
-- [] 第三方服务接入
-- [] tag, cat 支持
-- [] bookmark 上传
+- [ ] 第三方服务接入
+- [ ] tag, cat 支持
+- [ ] bookmark 上传
 - [x] 优化前端图片展示
 - [x] 添加对 sea.js 的支持
 - etc
 
 ## changlogs
+
+### 2013年3月14日
+
+ - 添加 Tag 和 TagRelation 表，Categories 以 tag_type 属性区分
 
 ### 2013年3月13日
 

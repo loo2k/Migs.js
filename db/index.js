@@ -10,6 +10,10 @@ mongoose.connect(config.db, function (err) {
 
 require('./user');
 require('./photo');
+require('./tag');
+require('./tagRelation');
 
 exports.User = mongoose.model('User');
 exports.Photo = mongoose.model('Photo');
+exports.Tag = mongoose.model('Tag');
+exports.TagRelation = mongoose.model('TagRelation');
