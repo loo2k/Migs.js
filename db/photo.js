@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
 
 var photoSchema = new Schema({
-    uid        : { type: String },
+    uid        : { type: ObjectId },
     title      : { type: String },
     desc       : { type: String },
     size       : { type: Number },
