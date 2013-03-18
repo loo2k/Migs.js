@@ -1,0 +1,49 @@
+<div class="sub-header-wrapper">
+    <div class="sub-header fn-clear">
+        <%= title %>
+    </div>
+</div>
+
+<div class="ui-layout-c12 fn-clear photo-viewer-wrapper">
+    <div class="add-tag">
+        <form action="/tag/create" method="post">
+            <p>
+                <input type="text" name="tag_name" id="tag_name" placeholder="标签名称" />
+            </p>
+            <p>
+                <input type="text" name="tag_desc" id="tag_desc" placeholder="标签描述" />
+            </p>
+            <p>
+                <input type="submit" value="添加" />
+            </p>
+        </form>
+    </div>
+    <div class="tag_list">
+        <table width="100%" border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>标签名称</th>
+                    <th>标签描述</th>
+                    <th>标签类型</th>
+                    <th>标签用户</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(locals.tags) { %>
+                <% for(var i = 0; i < tags.length; i++) { %>
+                <tr>
+                    <td><%= tags[i]._id %></td>
+                    <td><%= tags[i].tag_name %></td>
+                    <td><%= tags[i].tag_desc %></td>
+                    <td><%= tags[i].tag_type %></td>
+                    <td><%= tags[i].user_id %></td>
+                    <td><a href="/tag/<%= tags[i].tag_name %>/destroy">删除</a></td>
+                </tr>
+                <% } %>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

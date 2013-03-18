@@ -1,6 +1,8 @@
-var EventProxy = require('eventproxy');
-var dbPhoto  = require('../db').Photo;
-var User  = require('../models').User;
+var EventProxy  = require('eventproxy');
+var dbPhoto     = require('../db').Photo;
+var User        = require('./user');
+var Tag         = require('./tag');
+var TagRelation = require('./tagRelation');
 
 /**
  * 添加一张图片
@@ -28,9 +30,10 @@ exports.createPhoto = function(data, callback) {
 exports.getPhotoById = function(id, callback) {
     // dbPhoto.findOne({_id: id}, callback);
     var ep = new EventProxy();
-    var events = ['photo', 'author'];
-    ep.assign(events, function(photo, author) {
+    var events = ['photo', 'author', 'tags'];
+    ep.assign(events, function(photo, author, tags) {
         photo.author = author;
+        photo.tags = tags;
         return callback(null, photo);
     }).fail(callback);
 
@@ -38,14 +41,23 @@ exports.getPhotoById = function(id, callback) {
         if(!photo) {
             ep.emit('photo', null);
             ep.emit('author', null);
+            ep.emit('tags', []);
             return;
         }
         ep.emit('photo', photo);
 
         User.getUserById(photo.uid, ep.done('author'));
-        //ep.emit('author', null);
 
+        TagRelation.getRelationByQuery({user_id: photo.uid, photo_id: photo._id}, {}, ep.done(function(tagr) {
+            var tags_id = [];
+            for (var i = 0; i < tagr.length; i++) {
+                tags_id.push(tagr[i].tag_id);
+            };
+
+            Tag.getTagsByIds(tags_id, ep.done('tags'));
+        }));
     }));
+
 }
 
 /**
@@ -103,4 +115,13 @@ exports.getQueryCount = function(query, callback) {
  */
 exports.destroyPhotoById = function(id, callback) {
     dbPhoto.remove({'_id': id}, callback);
+}
+
+/**
+ * 检查符合条件的图片是否存在
+ * @param  {Object}   query    
+ * @param  {Function} callback 
+ */
+exports.isExist = function(query, callback) {
+    dbPhoto.find(query, '', {}, callback);
 }

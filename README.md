@@ -22,6 +22,10 @@
 
 ## changlogs
 
+### 2013年3月18日
+
+ - 准备好了 tag 的接口，为前端 MVC 做准备
+
 ### 2013年3月14日
 
  - 添加 Tag 和 TagRelation 表，Categories 以 tag_type 属性区分
