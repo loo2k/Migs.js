@@ -10,5 +10,5 @@ exports.config = {
     cookies_prefix: 'migs_',
     session_secret: 'migsapp',
     photo_limit   : 12,
-    allow_upload_ext: ['gif', 'png']
+    allow_upload_ext: ['jpg', 'gif', 'png']
 }

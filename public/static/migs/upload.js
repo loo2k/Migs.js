@@ -10,5 +10,5 @@ define(function(require) {
         e.preventDefault();
         $(this).tab('show');
     });
-    
+
 });

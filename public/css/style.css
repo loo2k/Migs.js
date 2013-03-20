@@ -231,7 +231,7 @@ body .fn-hide {
 }
 
 /**
- * plugin style
+ * tooltip plugin style
  */
 .tooltip {
   position: absolute;
@@ -310,6 +310,39 @@ body .fn-hide {
   border-bottom-color: #000000;
 }
 
+/**
+ * tab plugin style
+ */
+.nav-tabs {
+    line-height: 32px;
+    margin-bottom: 15px;
+}
+.nav-tabs li {
+    float: left;
+}
+.nav-tabs li a {
+    display: block;
+    padding: 0 10px;
+    margin-right: 10px;
+    border-radius: 3px;
+    font-size: 14px;
+
+}
+.nav-tabs .active a {
+    background-color: #DEDEDE;
+    color: #333333;
+    text-shadow: 1px 1px 1px #FFFFFF;
+}
+.tab-content {
+
+}
+.tab-pane {
+    display: none;
+}
+.tab-content .active {
+    display: block;
+}
+
 
 /**
  * form style
@@ -369,7 +402,7 @@ html, body {
 
 body {
     color: #333333;
-    font: 12px/24px normal Arial, Helvetica, sans-serif;
+    font: 12px/24px normal 'Open Sans', Arial, Helvetica, sans-serif;
 }
 
 a {
@@ -668,12 +701,18 @@ a:hover {
  * Upload Style
  */
 .drag-box {
+    padding: 50px 0;
     height: 150px;
     border: 3px dashed #CCCCCC;
     border-radius: 10px;
     margin-bottom: 15px;
-    line-height: 150px;
-    font-size: 24px;
+    line-height: 50px;
+    font-size: 26px;
     text-align: center;
     color: #999999;
+}
+
+.upload-tip {
+    font-size: 14px;
+    color: #666666;
 }

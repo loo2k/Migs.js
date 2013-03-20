@@ -5,21 +5,29 @@
 </div>
 <div class="ui-layout-c12 fn-clear photo-uploader">
     <div class="ui-layout-g12">
-        <div id="html_upload">
-            <form action="/upload" method="post" enctype="multipart/form-data">
-                <p>
-                    <input type="file" name="images" id="images" />
-                </p>
-                <p>
-                    <input class="ui-btn" type="submit" value="上传" />
-                </p>
-            </form>
+        <ul class="nav nav-tabs fn-clear">
+            <li class="active"><a href="#upload" data-toggle="tab">上传文件</a></li>
+            <li><a href="#uploaded" data-toggle="tab">已上传</a></li>
+        </ul>
+        <div class="tab-content">
+            <!-- 上传文件面板 -->
+            <div class="tab-pane active" id="upload">
+                    <div id="drag_file" class="drag-box">
+                        <p id="drag_text">把文件拖拽到虚线框内上传</p>
+                        <form id="htmlUpload" action="/upload" method="post" enctype="multipart/form-data">
+                            <input type="file" name="images" id="images" onchange="htmlUpload.submit();" style="display: none;" />
+                            <input onclick="images.click();" class="ui-btn" type="button" value="选择文件..." />
+                        </form>
+                        <p class="upload-tip">提示：文件类型必须为 .jpg, .png, .gif 的图片文件，且大小不得大于 2M；</p>
+                    </div>
+            </div>
+            <!-- 已上传文件面板 -->
+            <div class="tab-pane" id="uploaded">
+                你上传的图片将会显示在这里
+                <ul id="drag_list"></ul>
+            </div>
         </div>
 
-        <div id="drag_upload">
-            <div id="drag_file" class="drag-box">把文件拖拽到这里</div>
-            <ul id="drag_list"></ul>
-        </div>
         <script type="text/javascript">
         if (window.FileReader) {
 
@@ -109,12 +117,11 @@
             cnt.addEventListener('dragleave', handleDragLeave, false);
             
         } else {
-            document.getElementById('drag_file').innerHTML = '你的浏览器不支持啊，同学';
+            document.getElementById('drag_text').innerHTML = '请选择要上传的文件';
         }
         </script>
-
-        <div id="flash_upload">
-            1111
-        </div>
+        <script type="text/javascript">
+            seajs.use('./static/migs/upload');
+        </script>
     </div>
 </div>

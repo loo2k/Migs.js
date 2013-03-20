@@ -8,7 +8,7 @@ exports.uploadFile = function(req, res, next) {
     var file = req.files && req.files.images;
 
     if (!file) {
-        return next({ status: 'failed', message: 'no file' });
+        return next({code: '404', msg: '没有上传文件'});
     }
 
     var uid = req.session.user._id.toString();
@@ -18,7 +18,7 @@ exports.uploadFile = function(req, res, next) {
         if( !exists ) {
             fs.mkdirSync(userDir, function(err) {
                 if(err) {
-                    return err;
+                    return next({code: '500', msg: '服务器创建用户目录不成功'});
                 }
             });
         }
@@ -26,7 +26,7 @@ exports.uploadFile = function(req, res, next) {
         var filename = Date.now() + '_' + file.name;
         var savepath = path.resolve(path.join(userDir, filename));
         if (savepath.indexOf(path.resolve(userDir)) !== 0) {
-            return next({status: 'forbidden'});
+            return next({code: '402', msg: '没有文件目录操作权限'});
         }
 
         var readStream = fs.createReadStream(file.path);

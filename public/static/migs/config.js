@@ -1,7 +1,8 @@
 seajs.config({
     //base: 
     alias: {
-        'tooltip': 'lib/bootstrap-tooltip.js'
+        'tooltip': 'lib/bootstrap-tooltip.js',
+        'tab': 'lib/bootstrap-tab.js'
     },
     // Enable plugins
     plugins: ['shim'],

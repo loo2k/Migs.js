@@ -204,13 +204,15 @@ exports.upload = function(req, res) {
 
     photoHelper.uploadFile(req, res, function(err, file) {
         if(err) {
-            console.log(err);
+            return res.json(err.code, {code: err.code, error: '1', msg: err.msg})
         }
 
         var uploadFilePath = config.root_dir + '/' + config.static_dir + file.dir;
 
         photoHelper.identifyImage(uploadFilePath, function(err, features){
-            if (err) throw err;
+            if(err) {
+                console.log(err);
+            }
 
             var thumbFile = {
                 width   : features.width,
@@ -222,7 +224,9 @@ exports.upload = function(req, res) {
             }
 
             photoHelper.thumbImage(thumbFile, function(err) {
-                if(err) throw err;
+                if(err) {
+                    console.log(err);
+                }
             });
 
             var newPhoto = {
