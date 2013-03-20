@@ -3,18 +3,17 @@ var Photo       = require('../models').Photo;
 var config      = require('../config').config;
 var util        = require('../helper').util;
 var photoHelper = require('../helper').photo;
-var im          = require('imagemagick');
+var mimes       = require('../helper').mimes;
 var url         = require('url');
 var fs          = require('fs');
 
 exports.showPhotos = function(req, res) {
     var data = {
         title: '所有图片',
-        page: req.query['page'] ? parseInt(req.query['page'], 10) : 1,
+        page: req.query['page'] ? parseInt(req.query['page'], 10) : 1
     };
     
     var query = {};
-
     var option   = {};
     option.sort  = [['create_time', 'desc']];
     option.limit = req.query['show'] ? parseInt(req.query['show'], 10) : config.photo_limit;
@@ -29,7 +28,9 @@ exports.showPhotos = function(req, res) {
         };
 
         Photo.getQueryCount(query, function(err, total) {
-            if(err) throw err;
+            if(err) {
+                console.log(err);
+            }
 
             // 分页的准备
             if( req.query.page ) delete req.query.page;
@@ -53,11 +54,10 @@ exports.showUserPhoto = function(req, res) {
 
         var data = {
             title: user.username + '的图片',
-            page: req.query['page'] ? parseInt(req.query['page'], 10) : 1,
+            page: req.query['page'] ? parseInt(req.query['page'], 10) : 1
         };
 
         var query = { uid: user._id };
-
         var option = {};
         option.limit = req.query['show'] ? parseInt(req.query['show'], 10) : config.photo_limit;
         option.skip = ( data.page - 1)*option.limit;
@@ -72,7 +72,9 @@ exports.showUserPhoto = function(req, res) {
             };
             
             Photo.getQueryCount(query, function(err, total) {
-                if(err) throw err;
+                if(err) {
+                    console.log(err);
+                }
 
                 // 分页的准备
                 if( req.query.page ) delete req.query.page;
@@ -196,6 +198,10 @@ exports.upload = function(req, res) {
         return res.json('403', {code: '403', error: '1', msg: '未获得授权'});
     }
 
+    if(!mimes.mimesVerify(config.allow_upload_ext, req.files.images.type)) {
+        return res.json('400', {code: '400', error: '1', msg: '该文件类型不被支持上传'})
+    }
+
     photoHelper.uploadFile(req, res, function(err, file) {
         if(err) {
             console.log(err);
@@ -232,9 +238,7 @@ exports.upload = function(req, res) {
 
             Photo.createPhoto(newPhoto, function(err) {
                 if(err) {
-                    console.log(err);
-                    res.send('error');
-                    return;
+                    return console.log(err);
                 }
                 res.redirect('/');
             });

@@ -8,7 +8,8 @@
 bin/
 tmp/
 node_modules/
-public/upload/*
+public/upload/
+.idea/
 *.tmp
 *.bak
 *.swp

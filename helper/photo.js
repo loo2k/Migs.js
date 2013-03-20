@@ -4,11 +4,7 @@ var util   = require('util');
 var im     = require('imagemagick');
 var config = require('../config').config;
 
-exports.uploadFile = function (req, res, next) {
-    if (!req.session || !req.session.user) {
-        return next({ status: 'forbidden' });
-    }
-
+exports.uploadFile = function(req, res, next) {
     var file = req.files && req.files.images;
 
     if (!file) {
