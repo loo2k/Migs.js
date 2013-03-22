@@ -22,6 +22,10 @@
 
 ## changlogs
 
+### 2013年3月22日
+
+ - 修复一个登录错误处理的错误
+
 ### 2013年3月20日
 
  - 增加 Google Fonts Api : Open Sans

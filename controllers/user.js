@@ -60,7 +60,7 @@ exports.login = function(req, res) {
         password : util.cryptpass(req.sanitize('password').xss().trim())
     }
 
-    var errors = req.validationErrors(true);
+    var errors = req.validationErrors(true) || {};
 
     if(errors) {
         data.errors   = errors;
@@ -137,7 +137,7 @@ exports.register = function(req, res) {
         vpassword: util.cryptpass(req.sanitize('vpassword').xss().trim())
     }
 
-    var errors = req.validationErrors(true);
+    var errors = req.validationErrors(true) || {};
 
     // 判断密码是否相同
     if( user.password !== user.vpassword ) {
@@ -251,7 +251,7 @@ exports.editUser = function(req, res) {
             email    : req.sanitize('email').xss().trim().toLowerCase()
         }
 
-        var errors = req.validationErrors(true);
+        var errors = req.validationErrors(true) || {};
 
         console.log(req.session.user);
 
