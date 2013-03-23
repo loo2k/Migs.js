@@ -13,6 +13,7 @@
     "express-partials": "0.0.6",
     "mongodb": "1.2.13",
     "mongoose": "3.5.7",
-    "eventproxy": "0.2.2"
+    "eventproxy": "0.2.2",
+    "underscore": "1.4.4"
   }
 }

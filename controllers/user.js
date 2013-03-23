@@ -2,6 +2,7 @@ var User   = require('../models').User;
 var dbUser = require('../db').User;
 var util   = require('../helper').util;
 var config = require('../config').config;
+var _      = require('underscore');
 
 exports.authLogin = function(req, res, next) {
     if( req.cookies[config.cookies_prefix + 'login'] ) {
@@ -62,7 +63,7 @@ exports.login = function(req, res) {
 
     var errors = req.validationErrors(true) || {};
 
-    if(errors) {
+    if(!_.isEmpty(errors)) {
         data.errors   = errors;
         data.username = loginUser.username;
         res.render('user/login', data);
@@ -89,7 +90,7 @@ exports.login = function(req, res) {
             };
         }
 
-        if(errors) {
+        if(!_.isEmpty(errors)) {
             data.errors   = errors;
             data.username = loginUser.username;
             res.render('user/login', data);
@@ -149,7 +150,7 @@ exports.register = function(req, res) {
         };
     }
 
-    if(errors) {
+    if(!_.isEmpty(errors)) {
         data.errors   = errors;
         data.username = user.username;
         data.email    = user.email;
@@ -185,7 +186,7 @@ exports.register = function(req, res) {
             };
         }
 
-        if(errors) {
+        if(!_.isEmpty(errors)) {
             data.errors   = errors;
             data.username = user.username;
             data.email    = user.email;
@@ -253,9 +254,7 @@ exports.editUser = function(req, res) {
 
         var errors = req.validationErrors(true) || {};
 
-        console.log(req.session.user);
-
-        if(errors) {
+        if(!_.isEmpty(errors)) {
             data.errors = errors;
             data.user   = {
                 username: req.session.user.username,
@@ -312,6 +311,5 @@ exports.logout = function(req, res) {
     });
     //res.clearCookie(config.cookie_prefix + 'login');
     res.clearCookie(config.cookies_prefix + 'login');
-    res.redirect('../login');
-    res.send("logout success");
+    res.redirect('../');
 }
